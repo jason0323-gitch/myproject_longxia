@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>双 8 狂飙 · 小小高铁调度员</title>
+  <meta name="description" content="独立高铁调度模式：四个道岔、双节高铁、连续跨线、红灯停车和进路锁定。">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+  <header>
+    <div class="brand"><span class="logo" aria-hidden="true">↗</span><div><p>DOUBLE EIGHT / RAIL DISPATCH</p><h1>小小高铁调度员</h1></div></div>
+    <a class="back" href="../index.html">返回原版射击游戏 ↗</a>
+  </header>
+  <section class="intro"><div><span class="pill">双 8 狂飙 · 独立调度模式</span><h2>道岔排好，<em>高铁出发。</em></h2><p>你来指挥 G01，穿过四个道岔，把乘客送到下一站。</p></div><div class="mission"><span>今天的小任务</span><strong>开心站 ⇄ 海边站</strong><p>排好两端道岔 → 看绿灯 → 发车</p></div></section>
+  <div class="workspace">
+    <section class="rail-panel" aria-label="铁路运行画面">
+      <div class="scene-heading"><span><i class="live-dot"></i> 双 8 铁路沙盘</span><span id="journey">G01 · 开心站</span></div>
+      <div class="viewport" id="viewport">
+        <canvas id="scene" aria-label="双8字高架环线。四处道岔连接两条线路，白蓝色高铁沿橙色路线运行。可拖动旋转。"></canvas>
+        <div class="scene-legend"><span><i class="line orange"></i> 已选通路</span><span><i class="line blue"></i> 固定轨道</span><span>跨线桥上下分离</span></div>
+        <div class="view-tools"><button id="view" type="button">俯视图</button><button id="follow" type="button" aria-pressed="false">跟随列车</button><button id="zoom-in" type="button" aria-label="放大">＋</button><button id="zoom-out" type="button" aria-label="缩小">−</button></div>
+        <div id="graphics-error" role="alert" hidden>浏览器暂时无法显示 3D。请开启硬件加速，或使用支持 WebGL 的浏览器重新打开。</div>
+      </div>
+      <div class="train-status"><span id="signal-dot" class="signal-dot"></span><div><strong id="status">开心站 · 停站中</strong><span id="message" role="status" aria-live="polite">先看橙色路线，再按「发车」。</span></div><div class="speed"><strong id="speed">0</strong><span>动画速度</span></div></div>
+      <div class="drive-controls"><button class="primary" id="depart" type="button">▶ 发车</button><button id="stop" type="button">■ 停车</button><button id="pause" type="button" aria-pressed="false">Ⅱ 暂停画面</button></div>
+    </section>
+    <aside class="control-panel" aria-label="道岔控制台">
+      <div class="control-title"><div><span class="eyebrow">YOUR CONTROL DESK</span><h3>四个道岔，你来排</h3></div><span class="key-note">键盘 1—4</span></div>
+      <p class="control-help">跨线时，两端都要选「跨线」。黄色锁表示列车正在接近或通过。</p>
+      <div class="pair-label"><span>A · 左线 → 右线</span><small>1 号 + 2 号</small></div>
+      <div class="switch-grid" id="switches-a"></div>
+      <div class="pair-label"><span>B · 右线 → 左线</span><small>3 号 + 4 号</small></div>
+      <div class="switch-grid" id="switches-b"></div>
+      <div class="demo-box"><span>先看一次，再自己试</span><button id="demo" type="button">↻ 从车站开始连续演示</button><p>自动往返、停站，再连续变轨。按「停车」即可接管。</p></div>
+      <div class="trip-stats"><span>完成跨线 <strong id="crossings">0</strong></span><span>到站次数 <strong id="arrivals">0</strong></span><button id="reset" type="button">重来</button></div>
+    </aside>
+  </div>
+  <section class="learning"><div><span>01</span><strong>先排好路</strong><p>1＋2、3＋4 成对跨线。只开一端，高铁会在红灯前等你。</p></div><div><span>02</span><strong>车来先锁住</strong><p>列车接近时锁定道岔。等整列车通过，才能重新变轨。</p></div><div><span>03</span><strong>到站再出发</strong><p>手动模式到站停车，按「发车」继续。演示模式停 3 秒再出发。</p></div></section>
+  <footer><span>拖动画面旋转 · ＋ / − 缩放 · 空格暂停 · Enter 发车 · S 停车</span><span>教学沙盘：单列车、单向行驶；轨道坡度与比例经过夸张，不用于实际铁路操作。</span></footer>
+  <noscript>请启用 JavaScript 后运行此游戏。</noscript>
+</main>
+<script src="vendor/three.min.js"></script>
+<script src="engine.js"></script>
+<script src="layout.js"></script>
+<script src="train-model.js"></script>
+<script src="app.js"></script>
+</body></html>
