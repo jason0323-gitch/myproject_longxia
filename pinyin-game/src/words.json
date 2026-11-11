@@ -1,0 +1,22 @@
+[
+{"pinyin":"tí mù","text":"题目","split":"t—í → tí / m—ù → mù","tip":"题的第二声往上扬，目的第四声往下落。"},
+{"pinyin":"dì tǎn","text":"地毯","split":"d—ì → dì / t—ǎn → tǎn","tip":"t 要轻轻送出一口气，ǎn 的第三声读低一点再扬起。"},
+{"pinyin":"dì di","text":"弟弟","split":"d—ì → dì / di（轻声）","tip":"后一个弟轻轻带过，不要再重重地读第四声。"},
+{"pinyin":"ní tǔ","text":"泥土","split":"n—í → ní / t—ǔ → tǔ","tip":"n 发音时气流从鼻子出来，土的 t 要送气。"},
+{"pinyin":"nǔ lì","text":"努力","split":"n—ǔ → nǔ / l—ì → lì","tip":"努力的 n 和 l 不一样，先慢慢听，再连起来读。"},
+{"pinyin":"nà lǐ","text":"那里","split":"n—à → nà / l—ǐ → lǐ","tip":"那里指那个地方，nà 是第四声；哪里问地点，nǎ 是第三声。"},
+{"pinyin":"nǎ lǐ","text":"哪里","split":"n—ǎ → nǎ / l—ǐ → lǐ","tip":"两个第三声连读时，前一个第三声通常读得像第二声。拼音仍写 nǎ lǐ。"},
+{"pinyin":"dà dì","text":"大地","split":"d—à → dà / d—ì → dì","tip":"两个音节都是第四声，读完整，再轻轻连起来。"},
+{"pinyin":"dǎ lǐ","text":"打理","split":"d—ǎ → dǎ / l—ǐ → lǐ","tip":"两个第三声连读，前一个通常读得像第二声。"},
+{"pinyin":"dì tú","text":"地图","split":"d—ì → dì / t—ú → tú","tip":"d 不送气，t 要送气，可以用纸巾感受一下。"},
+{"pinyin":"mǎ lù","text":"马路","split":"m—ǎ → mǎ / l—ù → lù","tip":"路是 lù，嘴唇圆起来，和绿 lǜ 的 ü 不一样。"},
+{"pinyin":"bì lǜ","text":"碧绿","split":"b—ì → bì / l—ǜ → lǜ","tip":"绿的 ü 要撮口，像发 i 的舌位再把嘴唇拢圆。"},
+{"pinyin":"bō luó","text":"菠萝","split":"b—ō → bō / l—u—ó → luó","tip":"菠是 b 和 o 的两拼；萝的 luó 是 l、u、o 三拼。词音请以老师的要求为准。"},
+{"pinyin":"tuō luò","text":"脱落","split":"t—u—ō → tuō / l—u—ò → luò","tip":"两个音节都有介母 u，先慢慢拼，再连成一个词。"},
+{"pinyin":"luò tuo","text":"骆驼","split":"l—u—ò → luò / tuo（轻声）","tip":"骆的第四声往下落，驼轻轻带过，不要重读成 tuó。"},
+{"pinyin":"lǎ ba","text":"喇叭","split":"l—ǎ → lǎ / ba（轻声）","tip":"叭是轻声，像小尾巴一样轻轻带过去。"},
+{"pinyin":"luó bo","text":"萝卜","split":"l—u—ó → luó / bo（轻声）","tip":"萝是第二声往上扬，卜读轻声，不要读成 bǔ。"},
+{"pinyin":"lǐ fà","text":"理发","split":"l—ǐ → lǐ / f—à → fà","tip":"这里的发指头发，要读 fà，不是发现的 fā。"},
+{"pinyin":"lǚ tú","text":"旅途","split":"l—ǚ → lǚ / t—ú → tú","tip":"旅用 ü，要撮口；途用 u，嘴唇圆起来。"},
+{"pinyin":"kù zi","text":"裤子","split":"k—ù → kù / zi（轻声）","tip":"子是轻声。这个词超出 b p m f d t n l 范围，保留原需求例词，待完整作业核对。"}
+]
