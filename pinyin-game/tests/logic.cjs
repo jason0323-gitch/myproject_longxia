@@ -9,4 +9,7 @@ run('state.session=fresh();state.session.done=[0,1];begin(2);choose((question.in
 // Late browser result invalidated by completing a word.
 run('state.session=fresh();begin(0);globalThis.oldEpoch=playEpoch;finishWord("self")');check('playEpoch>oldEpoch',true);
 run('state.session=fresh();begin(0);state.config.unlock=1;state.session.done=[0];startGame()');run('globalThis.before=state.totalStars');for(let i=0;i<8;i++)run('guard=false;chooseBubble(question.index)');check('state.gameStars',8);check('state.totalStars===before',true);
-check('reportText().includes("声调准确度认证")',true);console.log(`PASS ${tests} logic assertions; no browser/microphone or phonetic accuracy claim.`);
+check('reportText().includes("声调准确度认证")',true);check('validState(state)',true);check('validState({})',false);check('validState({...state,config:{...state.config,rewards:null}})',false);
+run("AUDIO['马路']='data:audio/mpeg;base64,AAAA';state.config.approved['马路']=true");check("audioApproved({text:'马路'})",false);run("state.config.approved['马路']=audioStamp('马路')");check("audioApproved({text:'马路'})",true);run("AUDIO['马路']='data:audio/mpeg;base64,BBBB'");check("audioApproved({text:'马路'})",false);
+run("state.session=fresh();state.session.date='2000-01-01';view='play';rollover()");check('view','home');check('state.session.stars',0);
+console.log(`PASS ${tests} logic assertions; no browser/microphone or phonetic accuracy claim.`);

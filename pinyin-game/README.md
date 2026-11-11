@@ -43,7 +43,7 @@ node tests/logic.cjs
 node tests/browser.cjs
 ```
 
-源码分成词表、样式、行为与模板，构建仍输出单HTML。浏览器测试需要 Playwright 和 Chromium，测试脚本默认 `/usr/bin/chromium`。本次逻辑模拟19项通过；浏览器启动被执行环境的 socket/ptrace 限制阻止，未声称截图、真机或麦克风通过。详见 `TEST-REPORT.md`。
+源码分成词表、样式、行为与模板，构建仍输出单HTML。浏览器测试需要 Playwright 和 Chromium，测试脚本默认 `/usr/bin/chromium`。本次逻辑模拟27项通过；浏览器启动被执行环境的 socket/ptrace 限制阻止，未声称截图、真机或麦克风通过。详见 `TEST-REPORT.md`。
 
 ## 数据与安全
 
@@ -54,3 +54,7 @@ node tests/browser.cjs
 ## 音频来源
 
 词音作者 Yue Tan，经 Shtooka / hugolpz audio-cmn 整理。来源：https://github.com/hugolpz/audio-cmn 。仓库标注 CC-BY-SA；复用资料指向 CC BY-SA 3.0 US：https://creativecommons.org/licenses/by-sa/3.0/us/ 。原许可页面已失效，保留此溯源不等于提供法律保证。此处原样保留18个整词MP3；无音素切分，无教师认证。音频及其改编须保留署名、来源和相同许可要求；不可将网络公开可播放音频默认视为可再分发。
+
+## 后续加固
+
+从零搭建，不依赖原HTML。音频复核与具体录音内容绑定，替换录音后须重新复核；增加声母/韵母分色，午夜换日回首页和连点保护，校验本机存储及备份结构。Mac mini 真实验收仍受桌面锁定和工件传输失败阻碍，不能宣称通过。
