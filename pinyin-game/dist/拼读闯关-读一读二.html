@@ -68,7 +68,27 @@ function consentDialog(){modal('家长选择 · 浏览器语音识别',`<p>此�
 function enableBrowser(){if(!$('#consentCheck').checked)return toast('未同意，继续使用离线人工模式。');if(!/Chrome\//.test(navigator.userAgent)||/Edg\//.test(navigator.userAgent)||!(window.SpeechRecognition||window.webkitSpeechRecognition))return toast('当前不是支持的 Chrome 语音识别环境，请使用离线人工模式。');consented=true;state.config.engine='browser';save();closeModal();render();toast('本次辅助识别已启用，按麦克风按钮才会开始。')}
 function normalizeText(s){return s.replace(/[\s。，！？、,.!?]/g,'')}
 function judgePronunciation(expected,result){if(!result||result.kind==='error'||result.confidence<.65||!result.text)return {kind:'unknown'};return normalizeText(result.text)===normalizeText(expected.text)?{kind:'text-match'}:{kind:'unknown'}}
-function recognize(){if(!consented||state.config.engine!=='browser'||recognition)return;stopMedia();const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return toast('浏览器识别不可用，请人工确认。');const word=target();if(!word)return;const epoch=playEpoch;recognition=new SR();recognition.lang='zh-CN';recognition.interimResults=false;recognition.continuous=false;let received=false;const timer=setTimeout(()=>{try{recognition?.abort()}catch(e){}},10000);screenStatus='正在听…说完后稍等一下。';render();recognition.onresult=e=>{received=true;clearTimeout(timer);if(epoch!==playEpoch)return;const item=e.results[0][0];const result=judgePronunciation(word,{text:item.transcript,confidence:item.confidence});recognition=null;if(result.kind==='text-match'){screenStatus='文字匹配到了；声调仍需家长听辨。';finishWord('browser-text')}else{screenStatus='这次没听清，请再读一遍，或请家长帮忙。';render()}};recognition.onerror=()=>{clearTimeout(timer);if(epoch!==playEpoch)return;received=true;recognition=null;screenStatus='识别暂时不可用，没有算读错。请使用人工确认。';render()};recognition.onend=()=>{clearTimeout(timer);if(epoch!==playEpoch||received)return;recognition=null;screenStatus='这次没听清，没有算读错。请再读或人工确认。';render()};try{recognition.start()}catch(e){clearTimeout(timer);recognition=null;screenStatus='无法启动识别，请使用人工确认。';render()}}
+// Only an allowlisted diagnostic code is shown; no transcript, audio or raw error details are stored.
+function recognitionErrorMessage(code){
+const hints={
+'not-allowed':'麦克风访问未获允许。请家长检查 Chrome 网站麦克风权限，以及系统的麦克风隐私权限。',
+'service-not-allowed':'浏览器拒绝了识别服务。请家长检查浏览器或管理策略；不要反复调整麦克风。',
+'audio-capture':'浏览器未能取得麦克风音频。请家长检查系统输入设备和输入音量，并确认设备未被其他应用占用。',
+'network':'识别服务的网络连接失败。请家长检查联网情况；这不代表麦克风损坏。',
+'no-speech':'没有检测到清晰的语音。请靠近麦克风再读，或检查静音和输入音量。',
+'aborted':'这次识别已停止。准备好后可以再次点击，或继续人工确认。',
+'language-not-supported':'当前识别服务不支持所选的普通话语言。请使用人工确认。',
+'bad-grammar':'识别服务未接受本次请求配置，请使用人工确认。',
+'phrases-not-supported':'当前识别服务不支持所请求的短语功能，请使用人工确认。',
+'local-timeout':'本次等待已超时，已停止识别。请稍后重试或使用人工确认。',
+'local-busy':'浏览器识别暂时忙碌。请稍等，再点击一次。',
+'local-security':'浏览器安全限制阻止了识别。请家长检查浏览器权限和页面打开方式，不要绕过安全警告。',
+'local-start-failed':'浏览器未能启动识别，请使用人工确认。'
+};
+const known=Object.prototype.hasOwnProperty.call(hints,code),safe=known?code:'unknown';
+return (known?hints[code]:'识别暂时不可用，具体原因未知。请使用人工确认。')+' 没有算读错。（诊断：'+safe+'）';
+}
+function recognize(){if(!consented||state.config.engine!=='browser'||recognition)return;stopMedia();const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return toast('浏览器识别不可用，请人工确认。');const word=target();if(!word)return;const epoch=playEpoch;recognition=new SR();recognition.lang='zh-CN';recognition.interimResults=false;recognition.continuous=false;let received=false,timedOut=false;const timer=setTimeout(()=>{if(epoch!==playEpoch||received)return;timedOut=true;received=true;const active=recognition;recognition=null;try{active?.abort()}catch(e){}screenStatus=recognitionErrorMessage('local-timeout');render()},10000);screenStatus='正在听…说完后稍等一下。';render();recognition.onresult=e=>{received=true;clearTimeout(timer);if(epoch!==playEpoch)return;const item=e.results[0][0];const result=judgePronunciation(word,{text:item.transcript,confidence:item.confidence});recognition=null;if(result.kind==='text-match'){screenStatus='文字匹配到了；声调仍需家长听辨。';finishWord('browser-text')}else{screenStatus='这次没听清，请再读一遍，或请家长帮忙。';render()}};recognition.onerror=e=>{clearTimeout(timer);if(epoch!==playEpoch)return;received=true;recognition=null;screenStatus=recognitionErrorMessage(timedOut?'local-timeout':e?.error);render()};recognition.onend=()=>{clearTimeout(timer);if(epoch!==playEpoch||received)return;recognition=null;screenStatus='这次没听清，没有算读错。请再读或人工确认。';render()};try{recognition.start()}catch(e){clearTimeout(timer);received=true;recognition=null;screenStatus=recognitionErrorMessage(e?.name==='InvalidStateError'?'local-busy':e?.name==='NotAllowedError'?'not-allowed':e?.name==='SecurityError'?'local-security':'local-start-failed');render()}}
 function download(name,data,type){let a=document.createElement('a'),url=URL.createObjectURL(new Blob([data],{type}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function exportBackup(){download('拼读闯关-本机进度备份.json',JSON.stringify({schema:1,state},null,2),'application/json');toast('备份可能含孩子昵称，请妥善保管，不要公开上传。')}
 async function importBackup(e){let f=e.target.files[0];if(!f)return;if(f.size>1000000)return toast('备份过大，请检查文件。');try{const data=JSON.parse(await f.text()),s=data.state;if(data.schema!==1||!validState(s))throw Error();if(!confirm('导入备份会替换本机当前练习进度。确定继续？'))return;s.config.engine='manual';state=s;consented=false;save();closeModal();navigate('home');toast('备份已导入，仍使用离线人工模式。')}catch(e){toast('备份格式无效，当前进度未改变。')}}
@@ -82,3 +102,4 @@ state.config.engine='manual';rollover();render();
 window.PinyinTest={judgePronunciation,getState:()=>state,getView:()=>view,begin,finishWord,choose,level};
 
 </script></body></html>
+
