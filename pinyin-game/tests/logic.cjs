@@ -16,4 +16,25 @@ run("state.session=fresh();state.session.date='2000-01-01';view='play';rollover(
 run("AUDIO['题目']='data:audio/mpeg;base64,CCCC';APPROVED_AUDIO['题目']=audioStamp('题目');delete state.config.approved['题目']");check("audioApproved({text:'题目'})",true);
 run("state.config.approved['题目']=false");check("audioApproved({text:'题目'})",false);
 run("delete state.config.approved['题目'];AUDIO['题目']='data:audio/mpeg;base64,DDDD'");check("audioApproved({text:'题目'})",false);
+// Error diagnostics are allowlisted, transient, and never count as wrong.
+for(const code of ['not-allowed','service-not-allowed','audio-capture','network','no-speech','aborted','language-not-supported','bad-grammar','phrases-not-supported','local-timeout','local-busy','local-security','local-start-failed']){
+ check(`recognitionErrorMessage('${code}').includes('诊断：${code}')`,true);
+ check(`recognitionErrorMessage('${code}').includes('没有算读错')`,true);
+}
+check("recognitionErrorMessage('SECRET_RAW_ERROR').includes('SECRET_RAW_ERROR')",false);
+check("recognitionErrorMessage('__proto__').includes('诊断：unknown')",true);
+run(`state.session=fresh();begin(0);consented=true;state.config.engine='browser';window.SpeechRecognition=class {start(){} abort(){}};recognize();recognition.onerror({error:'network',message:'private detail'});`);
+check('screenStatus.includes("诊断：network")',true);
+check('screenStatus.includes("private detail")',false);
+check('Object.keys(state.session.attempts).length',0);
+check('Object.keys(state.session.rounds[0]).length',0);
+check('JSON.stringify(state).includes("network")',false);
+run(`window.SpeechRecognition=class {start(){throw Object.assign(new Error('private detail'),{name:'SecurityError'})}};recognize()`);
+check('screenStatus.includes("诊断：local-security")',true);
+check('recognition===null',true);
+// Navigation invalidates callbacks; they cannot overwrite the newer screen.
+run(`window.SpeechRecognition=class {start(){} abort(){}};recognize();globalThis.stale=recognition;navigate('home');stale.onerror({error:'audio-capture'});`);
+check('screenStatus','');
+check('view','home');
 console.log(`PASS ${tests} logic assertions; no browser/microphone or phonetic accuracy claim.`);
+
